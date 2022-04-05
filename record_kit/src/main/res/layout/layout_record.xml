@@ -35,6 +35,7 @@
         app:wave_line_max_height="36dp"
         app:wave_line_min_height="10dp"
         app:wave_line_space="3dp"
+        app:wave_line_max_value="60"
         app:wave_line_time_interval="50"
         app:wave_line_width="2dp" />
     <zyz.hero.record_kit.view.TimeProgressView

@@ -38,6 +38,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.guolindev.permissionx:permissionx:1.6.1'
+    implementation 'com.github.yongzhenzou:RecordLib:v1.0.1-alpha'
     implementation project(path: ':record_kit')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
