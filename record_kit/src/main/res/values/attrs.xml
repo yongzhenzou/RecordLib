@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="WaveView">
+        <attr name="wave_line_color" format="color|reference" />
+        <attr name="wave_line_cancel_color" format="color|reference" />
+        <attr name="wave_line_width" format="dimension|reference" />
+        <attr name="wave_line_space" format="dimension|reference" />
+        <attr name="wave_line_max_height" format="dimension|reference" />
+        <attr name="wave_line_min_height" format="dimension|reference" />
+        <attr name="wave_line_time_interval" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="RecordLayout">
+        <attr name="record_layout_recording_text" format="string|reference" />
+        <attr name="record_layout_cancel_text" format="string|reference" />
+        <attr name="record_layout_recording_text_color" format="color|reference" />
+        <attr name="record_layout_cancel_text_color" format="color|reference" />
+        <attr name="record_layout_max_time_second" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="TimeProgressView">
+        <attr name="time_progress_start_color" format="color|reference"/>
+        <attr name="time_progress_cancel_start_color" format="color|reference"/>
+        <attr name="time_progress_end_color" format="color|reference"/>
+        <attr name="time_progress_cancel_end_color" format="color|reference"/>
+        <attr name="time_progress_cancel_circle_color" format="color|reference"/>
+        <attr name="time_progress_cancel_bg_res" format="reference"/>
+        <attr name="time_progress_record_bg_res" format="reference"/>
+        <attr name="time_progress_center_img" format="reference"/>
+        <attr name="time_progress_text_color" format="color|reference"/>
+        <attr name="time_progress_text_size" format="dimension|reference"/>
+        <attr name="time_progress_max_value" format="integer|reference"/>
+        <attr name="time_progress_line_width" format="float|reference"/>
+        <attr name="time_progress_start_angle" format="float|reference"/>
+    </declare-styleable>
+
+</resources>
