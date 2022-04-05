@@ -46,7 +46,6 @@
         app:layout_constraintRight_toRightOf="@id/waveView"
         app:time_progress_text_size="17sp"
         android:layout_width="70dp"
-        app:time_progress_cancel_circle_color="#0000ff"
         android:layout_height="70dp"/>
 
     <View
