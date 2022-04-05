@@ -1,7 +1,5 @@
 package zyz.hero.record_kit.view
 
-import android.animation.Animator
-import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -10,10 +8,10 @@ import android.graphics.RectF
 import android.media.MediaRecorder
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.LinearInterpolator
 import androidx.annotation.ColorInt
 import zyz.hero.record_kit.R
 import zyz.hero.record_kit.RecordState
+import zyz.hero.record_kit.ThreadPool
 import zyz.hero.record_kit.dp
 import kotlin.math.min
 
@@ -25,15 +23,16 @@ class VoiceWaveView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0,
 ) : View(context, attrs, defStyleAttr) {
     private var recorder: MediaRecorder? = null
+    val TAG = "VoiceWaveView"
     var lineColor = 0
         //线条颜色
-        set( value) {
+        set(@ColorInt value) {
             field = value
             postInvalidate()
         }
     var cancelLineColor = 0
         //取消线条颜色
-        set( value) {
+        set(@ColorInt value) {
             field = value
             postInvalidate()
         }
@@ -67,9 +66,9 @@ class VoiceWaveView @JvmOverloads constructor(
             field = value
             postInvalidate()
         }
-    var maxValue: Int = 60
     private var paint: Paint? = null
     private var rectF: RectF = RectF()
+    private var runnable: Runnable? = null
 
     //存储voice对应的高度
     lateinit var voiceArray: IntArray
@@ -77,7 +76,7 @@ class VoiceWaveView @JvmOverloads constructor(
         set(value) {
             when (value) {
                 RecordState.START -> {
-                    animationStart()
+                    ThreadPool.cachedPools?.execute(runnable)
                     paint?.color = lineColor
                 }
                 RecordState.RECORDING -> {
@@ -87,35 +86,14 @@ class VoiceWaveView @JvmOverloads constructor(
                     paint?.color = cancelLineColor
                 }
                 RecordState.RELEASE -> {
-                    animator?.cancel()
                     recorder = null
                 }
             }
             field = value
         }
-    var animator: Animator? = null
-    private fun animationStart() {
-        if (::voiceArray.isInitialized&&voiceArray!=null){
-            voiceArray.forEachIndexed { index, i ->
-                voiceArray[index] = 0
-            }
-            invalidate()
-        }
-        animator = ValueAnimator.ofFloat(0f, maxValue * 1000f / timeInterval).apply {
-            duration = maxValue * 1000L
-            repeatCount = 0
-            interpolator = LinearInterpolator()
-            addUpdateListener {
-                if (recordState != RecordState.RELEASE){
-                    postInvalidate()
-                }
-            }
-            start()
-        }
-    }
 
     init {
-        var typedArray = context.obtainStyledAttributes(attrs, R.styleable.WaveView,defStyleAttr,0)
+        var typedArray = context.obtainStyledAttributes(attrs, R.styleable.WaveView)
         lineColor =
             typedArray.getColor(R.styleable.WaveView_wave_line_color, Color.parseColor("#AAB8E2"))
         cancelLineColor =
@@ -125,11 +103,25 @@ class VoiceWaveView @JvmOverloads constructor(
         lineSpace = typedArray.getDimension(R.styleable.WaveView_wave_line_space, 1f)
         maxHeight = typedArray.getDimension(R.styleable.WaveView_wave_line_max_height, 20f)
         minHeight = typedArray.getDimension(R.styleable.WaveView_wave_line_min_height, 5f)
-        maxValue = typedArray.getInt(R.styleable.WaveView_wave_line_max_value, 60)
         timeInterval = typedArray.getInt(R.styleable.WaveView_wave_line_time_interval, 50)
         typedArray.recycle()
         paint = Paint()
         paint?.color = lineColor
+        runnable = Runnable {
+            try {
+                if (::voiceArray.isInitialized) {
+                    voiceArray.forEachIndexed { index, i -> voiceArray[index] = 0 }
+                    postInvalidate()
+                }
+                while (recordState != RecordState.RELEASE) {
+                    postInvalidate()
+                    Thread.sleep(timeInterval.toLong())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }
     }
 
 
