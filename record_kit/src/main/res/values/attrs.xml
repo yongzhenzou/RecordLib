@@ -30,7 +30,6 @@
         <attr name="time_progress_text_size" format="dimension"/>
         <attr name="time_progress_max_value" format="integer"/>
         <attr name="time_progress_line_width" format="float"/>
-        <attr name="time_progress_start_angle" format="float"/>
     </declare-styleable>
 
 </resources>

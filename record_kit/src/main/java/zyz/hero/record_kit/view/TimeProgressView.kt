@@ -1,5 +1,6 @@
 package zyz.hero.record_kit.view
 
+import android.R.color
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
@@ -17,6 +18,7 @@ import zyz.hero.record_kit.dp
 import zyz.hero.record_kit.sp
 import kotlin.math.min
 
+
 /**
  * @author yongzhen_zou@163.com
  * @date 2022/4/2 11:52 下午
@@ -24,22 +26,45 @@ import kotlin.math.min
 class TimeProgressView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null,
 ) : ConstraintLayout(context, attrs) {
+    //录音状态进度条起始颜色
     var startColor = Color.parseColor("#4972F2")
+
+    //录音状态进度条结束颜色
     var endColor = Color.parseColor("#95AFFF")
+
+    //取消状态进度条起始颜色
     var cancelStartColor = Color.parseColor("#F34848")
+
+    //取消状态进度条结束颜色
     var cancelEndColor = Color.parseColor("#F34848")
+
+    //取消状态 进度条背景颜色
     var cancelCircleColor = Color.parseColor("#33F34848")
-    var cancelBgRes: Int = R.drawable.shape_time_progress_cancel_bg
+
+    //取消状态按钮中间图片资源ID
     var centerImg: Int = R.drawable.trash_can
+
+    //录音状态按钮中间drawable ID
     var recordBgRes: Int = R.drawable.shape_time_progress_record_bg
+
+    //取消状态按钮中间drawable ID
+    var cancelBgRes: Int = R.drawable.shape_time_progress_cancel_bg
+
+    //录音状态倒计时文本颜色
     var textColor: Int = Color.parseColor("#4872F2")
+
+    //录音状态倒计时文本大小
     var textSize: Float = 17.sp
+
+    //最大录音时长
     var maxValue: Int = 60
-    var startAngle: Float = -90f
+    private var startAngle: Float = -90f
+
+    //progress 绘制宽度
     var lineWidth: Float = 2f
     private var currentValue: Float = 0f
-    private var centerImageView:ImageView? = null
-    private var centerTextView:TextView? = null
+    private var centerImageView: ImageView? = null
+    private var centerTextView: TextView? = null
     private var paint: Paint? = null
     private var textPaint: Paint? = null
     private var cancelCirclePaint: Paint? = null
@@ -47,7 +72,6 @@ class TimeProgressView @JvmOverloads constructor(
     private var cancelGradient: SweepGradient? = null
     private var drawAnimator: ValueAnimator? = null
     private var countDownAnimator: ValueAnimator? = null
-    private var centerText: String = "0:00"
     private var rectF: RectF = RectF()
     var recordState: Int = RecordState.RECORDING
         set(value) {
@@ -82,6 +106,7 @@ class TimeProgressView @JvmOverloads constructor(
                 }
             }
         }
+
     private fun startRecord() {
         try {
             if (recordState != RecordState.RELEASE) {
@@ -133,43 +158,60 @@ class TimeProgressView @JvmOverloads constructor(
     }
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.layout_time_progress_view,this)
+        LayoutInflater.from(context).inflate(R.layout.layout_time_progress_view, this)
         centerImageView = findViewById(R.id.centerImg)
         centerTextView = findViewById(R.id.centerText)
-        var typeArray = context.obtainStyledAttributes(R.styleable.TimeProgressView)
-        startColor = typeArray.getColor(R.styleable.TimeProgressView_time_progress_start_color,
-            Color.parseColor("#4972F2"))
-        endColor = typeArray.getColor(R.styleable.TimeProgressView_time_progress_start_color,
-            Color.parseColor("#95AFFF"))
+        var typeArray = context.obtainStyledAttributes(attrs, R.styleable.TimeProgressView)
+        startColor = typeArray.getColor(
+            R.styleable.TimeProgressView_time_progress_start_color,
+            Color.parseColor("#4972F2")
+        )
+        endColor = typeArray.getColor(
+            R.styleable.TimeProgressView_time_progress_end_color,
+            Color.parseColor("#95AFFF")
+        )
         cancelStartColor =
-            typeArray.getColor(R.styleable.TimeProgressView_time_progress_cancel_start_color,
-                Color.parseColor("#fff34848"))
+            typeArray.getColor(
+                R.styleable.TimeProgressView_time_progress_cancel_start_color,
+                Color.parseColor("#fff34848")
+            )
         cancelEndColor =
-            typeArray.getColor(R.styleable.TimeProgressView_time_progress_cancel_end_color,
-                Color.parseColor("#F34848"))
+            typeArray.getColor(
+                R.styleable.TimeProgressView_time_progress_cancel_end_color,
+                Color.parseColor("#F34848")
+            )
         cancelCircleColor =
-            typeArray.getColor(R.styleable.TimeProgressView_time_progress_cancel_circle_color,
-                Color.parseColor("#33F34848"))
+            typeArray.getColor(
+                R.styleable.TimeProgressView_time_progress_cancel_circle_color,
+                Color.parseColor("#33F34848")
+            )
 
         cancelBgRes =
-            typeArray.getResourceId(R.styleable.TimeProgressView_time_progress_cancel_bg_res,
-                R.drawable.shape_time_progress_cancel_bg)
-        centerImg = typeArray.getResourceId(R.styleable.TimeProgressView_time_progress_center_img,
-            R.drawable.trash_can)
+            typeArray.getResourceId(
+                R.styleable.TimeProgressView_time_progress_cancel_bg_res,
+                R.drawable.shape_time_progress_cancel_bg
+            )
+        centerImg = typeArray.getResourceId(
+            R.styleable.TimeProgressView_time_progress_center_img,
+            R.drawable.trash_can
+        )
         centerImageView?.setImageResource(centerImg)
         recordBgRes =
-            typeArray.getResourceId(R.styleable.TimeProgressView_time_progress_record_bg_res,
-                R.drawable.shape_time_progress_record_bg)
+            typeArray.getResourceId(
+                R.styleable.TimeProgressView_time_progress_record_bg_res,
+                R.drawable.shape_time_progress_record_bg
+            )
         textColor =
-            typeArray.getColor(R.styleable.TimeProgressView_time_progress_text_color,
-                Color.parseColor("#4872F2"))
+            typeArray.getColor(
+                R.styleable.TimeProgressView_time_progress_text_color,
+                Color.parseColor("#4872F2")
+            )
         maxValue = typeArray.getInt(R.styleable.TimeProgressView_time_progress_max_value, 60)
         textSize =
             typeArray.getDimension(R.styleable.TimeProgressView_time_progress_text_size, 17.sp)
-        centerTextView?.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize)
+        centerTextView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
         centerTextView?.setTextColor(textColor)
         lineWidth = typeArray.getFloat(R.styleable.TimeProgressView_time_progress_line_width, 2.dp)
-        startAngle = typeArray.getFloat(R.styleable.TimeProgressView_time_progress_start_angle, -90f)
         typeArray.recycle()
         paint = Paint().apply {
             isAntiAlias = true
@@ -201,22 +243,52 @@ class TimeProgressView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        rectF.set(0f + lineWidth / 2,
+        rectF.set(
+            0f + lineWidth / 2,
             0f + lineWidth / 2,
             w.toFloat() - lineWidth / 2,
-            h.toFloat() - lineWidth / 2)
-
-        recordingGradient = SweepGradient(rectF?.centerX(), rectF?.centerY(), startColor, endColor)
+            h.toFloat() - lineWidth / 2
+        )
+        var recordQuarterColor = quarterColor(startColor, endColor)
+        var cancelQuarterColor = quarterColor(cancelStartColor, cancelEndColor)
+        recordingGradient = SweepGradient(
+            rectF?.centerX(), rectF?.centerY(),
+            intArrayOf(recordQuarterColor, endColor, startColor, recordQuarterColor),
+            floatArrayOf(0f, 0.74f, 0.75f, 1f)
+        )
         cancelGradient =
-            SweepGradient(rectF?.centerX(), rectF?.centerY(), cancelStartColor, cancelEndColor)
+            SweepGradient(
+                rectF?.centerX(), rectF?.centerY(),
+                intArrayOf(
+                    cancelQuarterColor,
+                    cancelEndColor,
+                    cancelStartColor,
+                    cancelQuarterColor
+                ),
+                floatArrayOf(0f, 0.74f, 0.75f, 1f)
+            )
         paint?.shader = if (recordState == RecordState.CANCEL) cancelGradient else recordingGradient
     }
+
+    fun quarterColor(startColor: Int, endColor: Int): Int {
+        return Color.rgb(
+            (startColor and 0xff0000 shr 16) * 1.25.toInt() - (endColor and 0xff0000 shr 16) * 0.25.toInt(),
+            (startColor and 0x00ff00 shr 8) * 1.25.toInt() - (endColor and 0x00ff00 shr 8) * 0.25.toInt(),
+            (startColor and 0x0000ff) * 1.25.toInt() - (endColor and 0x0000ff) * 0.25.toInt()
+        )
+    }
+
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         setWillNotDraw(false)
-        if (recordState==RecordState.CANCEL){
-            canvas?.drawCircle(rectF?.centerX(),rectF?.centerY(),rectF?.width()/2,cancelCirclePaint!!)
+        if (recordState == RecordState.CANCEL) {
+            canvas?.drawCircle(
+                rectF?.centerX(),
+                rectF?.centerY(),
+                rectF?.width() / 2,
+                cancelCirclePaint!!
+            )
         }
         canvas?.drawArc(rectF, startAngle, currentValue, false, paint!!)
     }
