@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/project/RecordLib/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/project/RecordLib/record_kit/src/main/res/layout/layout_record.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="record_kit/src/main/res/drawable/shape_time_progress_cancel_bg.xml" value="0.141" />

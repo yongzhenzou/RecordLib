@@ -1,5 +1,6 @@
 package zyz.hero.record_kit.view
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.pm.PackageManager
@@ -25,7 +26,7 @@ import java.io.File
  * @date 2022/4/1 9:38 下午
  */
 class RecordLayout @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null,
+    context: Context, attrs: AttributeSet? = null
 ) : ConstraintLayout(context, attrs), AudioManager.OnAudioFocusChangeListener {
     var recordingText: String = "松手发送，上划取消"
     var cancelText: String? = "松开取消"
@@ -72,17 +73,21 @@ class RecordLayout @JvmOverloads constructor(
 
     private fun stopRecord(cancel: Boolean) {
         try {
+            visibility = View.GONE
             audioManager?.abandonAudioFocus(this)
             recorder?.setOnErrorListener(null)
             recorder?.setPreviewDisplay(null)
             recorder?.stop()
             recorder?.reset()
             recorder?.release()
+            recorder = null
             if (cancel) {
                 recordFile?.delete()
             } else {
-                onRecordComplete?.invoke(recordFile,
-                    System.currentTimeMillis() - startRecordTimeMillis)
+                onRecordComplete?.invoke(
+                    recordFile,
+                    System.currentTimeMillis() - startRecordTimeMillis
+                )
             }
         } catch (e: Exception) {
             onRecordComplete?.invoke(recordFile, 0)
@@ -97,17 +102,26 @@ class RecordLayout @JvmOverloads constructor(
 
     private fun startRecorder() {
         try {
-            initRecorder()
-            waveView?.setRecorder(recorder!!)
             audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
             audioManager?.requestAudioFocus(
                 this,
                 AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
             );
+            audioManager?.mode = AudioManager.MODE_NORMAL
+            recorder = MediaRecorder()
+            recorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
+            recorder?.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB)
+            recorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+            recorder?.setAudioChannels(1) //1
+            recorder?.setAudioSamplingRate(44100)
+            recorder?.setAudioEncodingBitRate(96000) //64
+            recorder?.setOutputFile(recordFile?.absolutePath)
+            recorder?.setMaxDuration(maxLength * 1000)
+            waveView?.setRecorder(recorder!!)
             recorder?.prepare()
-            startRecordTimeMillis = System.currentTimeMillis()
             recorder?.start()
+            startRecordTimeMillis = System.currentTimeMillis()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -135,21 +149,12 @@ class RecordLayout @JvmOverloads constructor(
             Color.parseColor("#F34848")
         )
         maxLength = typeArray.getInt(R.styleable.RecordLayout_record_layout_max_time_second, 60)
+        progressView?.maxValue = maxLength
+        progressView?.onRecordEnd = {
+            stopRecord(false)
+        }
         typeArray.recycle()
     }
-
-    private fun initRecorder() {
-        recorder = MediaRecorder()
-        recorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-        recorder?.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB)
-        recorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-        recorder?.setAudioChannels(2) //1
-        recorder?.setAudioSamplingRate(44100)
-        recorder?.setAudioEncodingBitRate(96000) //64
-        recorder?.setOutputFile(recordFile?.absolutePath)
-        recorder?.setMaxDuration(maxLength * 1000)
-    }
-
     fun setFile(file: File) {
         this.recordFile = file
     }
@@ -168,35 +173,41 @@ class RecordLayout @JvmOverloads constructor(
 
     }
 
+    var location: IntArray = IntArray(2)
     fun delegate(v: View?, event: MotionEvent?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !hasPermissions()) {
+            return
+        }
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkPermissions()) {
-                        vibrate()
-                        visibility = View.VISIBLE
-                        recordState = RecordState.START
-                    }
-                } else {
-                    vibrate()
-                    visibility = View.VISIBLE
-                    recordState = RecordState.START
-                }
+                vibrate()
+                visibility = View.VISIBLE
+                recordState = RecordState.START
+
             }
             MotionEvent.ACTION_MOVE -> {
-                if (event.y + (voiceButtonLayout?.height ?: 0) - (v?.height ?: 0) < 0) {
-                    recordState = RecordState.CANCEL
-                } else {
+                if (visibility!=View.VISIBLE){
+                    return
+                }
+                voiceButtonLayout?.getLocationOnScreen(location)
+                if (event.rawX.toInt() in location[0]..location[0] + voiceButtonLayout!!.width && event.rawY.toInt() > location[1]) {
                     recordState = RecordState.RECORDING
+                } else {
+                    recordState = RecordState.CANCEL
                 }
             }
             MotionEvent.ACTION_CANCEL -> {
+                if (visibility!=View.VISIBLE){
+                    return
+                }
                 recordState = RecordState.RELEASE
-                visibility = View.GONE
             }
             MotionEvent.ACTION_UP -> {
+                if (visibility!=View.VISIBLE){
+                    return
+                }
                 recordState = RecordState.RELEASE
-                visibility = View.GONE
+
             }
             else -> {}
         }
@@ -205,7 +216,7 @@ class RecordLayout @JvmOverloads constructor(
     var onRequestPermissions: (() -> Unit)? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun checkPermissions(): Boolean {
+    private fun hasPermissions(): Boolean {
         if (PackageManager.PERMISSION_GRANTED != context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
             PackageManager.PERMISSION_GRANTED != context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)
         ) {
@@ -215,6 +226,7 @@ class RecordLayout @JvmOverloads constructor(
         return true
     }
 
+    @SuppressLint("MissingPermission")
     fun vibrate() {
         var vibrator = context.getSystemService(Service.VIBRATOR_SERVICE) as? Vibrator
         vibrator?.vibrate(50)

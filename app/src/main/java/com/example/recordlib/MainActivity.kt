@@ -38,14 +38,14 @@ class MainActivity : AppCompatActivity() {
             when (event?.action) {
                 MotionEvent.ACTION_CANCEL,
                 MotionEvent.ACTION_UP -> {
-                    textView.visibility = View.VISIBLE
+
                 }
                 MotionEvent.ACTION_DOWN -> {
                     recordLayout.setFile(FileUtils.getVoiceFile(this))
-                    textView.visibility = View.GONE
+
                 }
                 else->{
-                    textView.visibility = View.GONE
+
                 }
             }
             recordLayout.delegate(v,event)

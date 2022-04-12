@@ -20,10 +20,9 @@ import kotlin.math.min
  * @date 2022/4/1 9:39 下午
  */
 class VoiceWaveView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0,
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     private var recorder: MediaRecorder? = null
-    val TAG = "VoiceWaveView"
     var lineColor = 0
         //线条颜色
         set(@ColorInt value) {
@@ -86,6 +85,7 @@ class VoiceWaveView @JvmOverloads constructor(
                     paint?.color = cancelLineColor
                 }
                 RecordState.RELEASE -> {
+                    resetVoiceArray()
                     recorder = null
                 }
             }
@@ -93,26 +93,24 @@ class VoiceWaveView @JvmOverloads constructor(
         }
 
     init {
-        var typedArray = context.obtainStyledAttributes(attrs, R.styleable.WaveView)
+        var typedArray = context.obtainStyledAttributes(attrs, R.styleable.VoiceWaveView)
         lineColor =
-            typedArray.getColor(R.styleable.WaveView_wave_line_color, Color.parseColor("#AAB8E2"))
+            typedArray.getColor(R.styleable.VoiceWaveView_wave_line_color, Color.parseColor("#AAB8E2"))
         cancelLineColor =
-            typedArray.getColor(R.styleable.WaveView_wave_line_cancel_color,
+            typedArray.getColor(R.styleable.VoiceWaveView_wave_line_cancel_color,
                 Color.parseColor("#FFE8E8"))
-        lineWidth = typedArray.getDimension(R.styleable.WaveView_wave_line_width, 1f)
-        lineSpace = typedArray.getDimension(R.styleable.WaveView_wave_line_space, 1f)
-        maxHeight = typedArray.getDimension(R.styleable.WaveView_wave_line_max_height, 20f)
-        minHeight = typedArray.getDimension(R.styleable.WaveView_wave_line_min_height, 5f)
-        timeInterval = typedArray.getInt(R.styleable.WaveView_wave_line_time_interval, 50)
+        lineWidth = typedArray.getDimension(R.styleable.VoiceWaveView_wave_line_width, 1f)
+        lineSpace = typedArray.getDimension(R.styleable.VoiceWaveView_wave_line_space, 1f)
+        maxHeight = typedArray.getDimension(R.styleable.VoiceWaveView_wave_line_max_height, 20f)
+        minHeight = typedArray.getDimension(R.styleable.VoiceWaveView_wave_line_min_height, 5f)
+        timeInterval = typedArray.getInt(R.styleable.VoiceWaveView_wave_line_time_interval, 50)
         typedArray.recycle()
         paint = Paint()
         paint?.color = lineColor
         runnable = Runnable {
             try {
-                if (::voiceArray.isInitialized) {
-                    voiceArray.forEachIndexed { index, i -> voiceArray[index] = 0 }
-                    postInvalidate()
-                }
+                resetVoiceArray()
+                postInvalidate()
                 while (recordState != RecordState.RELEASE) {
                     postInvalidate()
                     Thread.sleep(timeInterval.toLong())
@@ -121,6 +119,12 @@ class VoiceWaveView @JvmOverloads constructor(
                 e.printStackTrace()
             }
 
+        }
+    }
+
+    private fun resetVoiceArray() {
+        if (::voiceArray.isInitialized) {
+            voiceArray.forEachIndexed { index, i -> voiceArray[index] = 0 }
         }
     }
 

@@ -1,6 +1,5 @@
 package zyz.hero.record_kit.view
 
-import android.R.color
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
@@ -24,7 +23,7 @@ import kotlin.math.min
  * @date 2022/4/2 11:52 下午
  */
 class TimeProgressView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null,
+    context: Context, attrs: AttributeSet? = null
 ) : ConstraintLayout(context, attrs) {
     //录音状态进度条起始颜色
     var startColor = Color.parseColor("#4972F2")
@@ -73,6 +72,7 @@ class TimeProgressView @JvmOverloads constructor(
     private var drawAnimator: ValueAnimator? = null
     private var countDownAnimator: ValueAnimator? = null
     private var rectF: RectF = RectF()
+    var onRecordEnd:(()->Unit)? = null
     var recordState: Int = RecordState.RECORDING
         set(value) {
             field = value
@@ -127,6 +127,9 @@ class TimeProgressView @JvmOverloads constructor(
                     interpolator = LinearInterpolator()
                     addUpdateListener {
                         centerTextView?.text = formatText(it.animatedValue as? Int ?: 0)
+                        if (it.animatedValue as Int == maxValue){
+                            onRecordEnd?.invoke()
+                        }
                     }
                     start()
                 }
