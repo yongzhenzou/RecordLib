@@ -154,6 +154,7 @@ class RecordLayout @JvmOverloads constructor(
             stopRecord(false)
         }
         typeArray.recycle()
+        visibility = View.GONE
     }
     fun setFile(file: File) {
         this.recordFile = file
@@ -229,6 +230,6 @@ class RecordLayout @JvmOverloads constructor(
     @SuppressLint("MissingPermission")
     fun vibrate() {
         var vibrator = context.getSystemService(Service.VIBRATOR_SERVICE) as? Vibrator
-        vibrator?.vibrate(50)
+        vibrator?.vibrate(30)
     }
 }

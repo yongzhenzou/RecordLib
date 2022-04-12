@@ -39,7 +39,6 @@
         android:id="@+id/recordLayout"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:record_layout_cancel_text="松开取消"
         app:record_layout_cancel_text_color="#F34848"
