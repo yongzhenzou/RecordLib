@@ -38,7 +38,7 @@
     <zyz.hero.record_kit.view.RecordLayout
         android:id="@+id/recordLayout"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:record_layout_cancel_text="松开取消"
         app:record_layout_cancel_text_color="#F34848"

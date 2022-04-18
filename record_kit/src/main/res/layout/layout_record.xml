@@ -3,91 +3,102 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="500dp"
-    android:background="@drawable/voice_layout_bg">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/stateText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="松手发送，上划取消"
-        android:textColor="#979797"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46" />
-
-    <zyz.hero.record_kit.view.VoiceWaveView
-        android:id="@+id/waveView"
-        android:layout_width="0dp"
-        android:layout_height="36dp"
-        android:layout_marginHorizontal="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.62"
-        app:wave_line_cancel_color="#FFE8E8"
-        app:wave_line_color="#AAB8E2"
-        app:wave_line_max_height="36dp"
-        app:wave_line_min_height="10dp"
-        app:wave_line_space="3dp"
-        app:wave_line_max_value="60"
-        app:wave_line_time_interval="50"
-        app:wave_line_width="2dp" />
-    <zyz.hero.record_kit.view.TimeProgressView
-        android:id="@+id/progressView"
-        app:layout_constraintTop_toTopOf="@id/waveView"
-        app:layout_constraintBottom_toBottomOf="@id/waveView"
-        app:layout_constraintLeft_toLeftOf="@id/waveView"
-        app:layout_constraintRight_toRightOf="@id/waveView"
-        app:time_progress_text_size="17sp"
-        app:time_progress_max_value="10"
-        app:time_progress_start_color="#95AFFF"
-        app:time_progress_end_color="#4972F2"
-        android:layout_width="70dp"
-        android:layout_height="70dp"/>
-
-    <View
-        android:layout_width="50dp"
-        android:layout_height="0dp"
-        android:background="@drawable/shape_gradient_white_transparent"
-        app:layout_constraintBottom_toBottomOf="@id/waveView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/waveView" />
-
-    <View
-        android:layout_width="50dp"
-        android:layout_height="0dp"
-        android:background="@drawable/shape_gradient_transparent_white"
-        app:layout_constraintBottom_toBottomOf="@id/waveView"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/waveView" />
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.76"/>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/voiceButtonLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/bg_voice_button_layout"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline">
-        <ImageView
-            android:id="@+id/volumeImg"
-            app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="500dp"
+        android:background="@drawable/voice_layout_bg">
+
+
+        <TextView
+            android:id="@+id/stateText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="松手发送，上划取消"
+            android:textColor="#979797"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.46" />
+
+        <zyz.hero.record_kit.view.VoiceWaveView
+            android:id="@+id/waveView"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.62"
+            app:wave_line_cancel_color="#FFE8E8"
+            app:wave_line_color="#AAB8E2"
+            app:wave_line_max_height="36dp"
+            app:wave_line_max_value="60"
+            app:wave_line_min_height="10dp"
+            app:wave_line_space="3dp"
+            app:wave_line_time_interval="50"
+            app:wave_line_width="2dp" />
+
+        <zyz.hero.record_kit.view.TimeProgressView
+            android:id="@+id/progressView"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:layout_constraintBottom_toBottomOf="@id/waveView"
+            app:layout_constraintLeft_toLeftOf="@id/waveView"
+            app:layout_constraintRight_toRightOf="@id/waveView"
+            app:layout_constraintTop_toTopOf="@id/waveView"
+            app:time_progress_end_color="#4972F2"
+            app:time_progress_max_value="10"
+            app:time_progress_start_color="#95AFFF"
+            app:time_progress_text_size="17sp" />
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_gradient_white_transparent"
+            app:layout_constraintBottom_toBottomOf="@id/waveView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/waveView" />
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_gradient_transparent_white"
+            app:layout_constraintBottom_toBottomOf="@id/waveView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/waveView" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
             android:layout_width="wrap_content"
-            app:layout_constraintVertical_bias="0.65"
-            android:src="@drawable/icon_volume"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.76" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/voiceButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_voice_button_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline">
+
+            <ImageView
+                android:id="@+id/volumeImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_volume"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.65" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

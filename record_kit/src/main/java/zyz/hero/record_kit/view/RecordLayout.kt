@@ -129,6 +129,8 @@ class RecordLayout @JvmOverloads constructor(
     }
 
     init {
+        isClickable = true
+        isFocusable = true
         LayoutInflater.from(context).inflate(R.layout.layout_record, this)
         waveView = findViewById(R.id.waveView)
         stateTextView = findViewById(R.id.stateText)
@@ -156,6 +158,7 @@ class RecordLayout @JvmOverloads constructor(
         typeArray.recycle()
         visibility = View.GONE
     }
+
     fun setFile(file: File) {
         this.recordFile = file
     }
@@ -187,7 +190,7 @@ class RecordLayout @JvmOverloads constructor(
 
             }
             MotionEvent.ACTION_MOVE -> {
-                if (visibility!=View.VISIBLE){
+                if (visibility != View.VISIBLE) {
                     return
                 }
                 voiceButtonLayout?.getLocationOnScreen(location)
@@ -198,13 +201,13 @@ class RecordLayout @JvmOverloads constructor(
                 }
             }
             MotionEvent.ACTION_CANCEL -> {
-                if (visibility!=View.VISIBLE){
+                if (visibility != View.VISIBLE) {
                     return
                 }
                 recordState = RecordState.RELEASE
             }
             MotionEvent.ACTION_UP -> {
-                if (visibility!=View.VISIBLE){
+                if (visibility != View.VISIBLE) {
                     return
                 }
                 recordState = RecordState.RELEASE
